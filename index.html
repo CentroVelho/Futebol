@@ -2,50 +2,70 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FutCenter - Painel do Futebol</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    
+
     <style>
-        /* Ajuste de responsividade para os iframes */
-        .widget-container iframe {
+        /* Ajuste fino para garantir que o iframe preencha o container fluidamente */
+        .widget-iframe-container iframe {
+            width: 100% !important;
             max-width: 100% !important;
-            margin: 0 auto;
+            border: none !important;
+            display: block;
         }
+
+        /* Efeito de transição suave de fade-in */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-fade-in {
-            animation: fadeIn 0.4s ease-out forwards;
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        /* Otimização de rolagem para dispositivos móveis */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col font-sans">
-    
-    <header class="bg-green-700 text-white shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between py-4 gap-4">
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans antialiased">
+
+    <!-- Header fixo com visual premium e indicador de atualização -->
+    <header class="bg-emerald-700 text-white shadow-md sticky top-0 z-40 backdrop-blur-md bg-emerald-700/95">
+        <div class="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between max-w-7xl">
             <!-- Logo -->
             <a href="#jogos" class="flex items-center gap-2 hover:opacity-90 transition-opacity">
-                <i data-lucide="trophy" class="w-8 h-8 text-yellow-400"></i>
-                <span class="text-2xl font-black tracking-wider uppercase">FutCenter</span>
+                <div class="bg-emerald-600 p-1.5 rounded-lg border border-emerald-500/30">
+                    <i data-lucide="trophy" class="w-5 h-5 sm:w-6 sm:h-6 text-yellow-400"></i>
+                </div>
+                <span class="text-lg sm:text-xl font-black tracking-wider uppercase">FutCenter</span>
             </a>
-            
-            <!-- Menu de Navegação (Links Internos) -->
-            <nav class="flex items-center gap-2 bg-green-800/50 p-1 rounded-xl border border-green-600/30">
-                <a 
-                    href="#jogos" 
-                    id="nav-jogos" 
-                    class="px-5 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2"
+
+            <!-- Menu de Navegação - Desktop (oculto no mobile) -->
+            <nav class="hidden md:flex items-center gap-2 bg-emerald-800/40 p-1 rounded-xl border border-emerald-600/30">
+                <a
+                    href="#jogos"
+                    id="nav-jogos"
+                    class="px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2"
                 >
                     <i data-lucide="calendar-clock" class="w-4 h-4"></i>
                     Próximos Jogos
                 </a>
-                <a 
-                    href="#classificacao" 
-                    id="nav-classificacao" 
-                    class="px-5 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2"
+                <a
+                    href="#classificacao"
+                    id="nav-classificacao"
+                    class="px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2"
                 >
                     <i data-lucide="list-ordered" class="w-4 h-4"></i>
                     Classificação
@@ -54,113 +74,211 @@
         </div>
     </header>
 
-    <main class="flex-grow container mx-auto px-4 py-8 max-w-4xl flex flex-col items-center justify-start">
-        
-        <!-- Cabeçalho Dinâmico da Página Atual -->
-        <div class="text-center mb-8 animate-fade-in" id="page-header">
-            <div class="inline-flex p-3 bg-green-100 text-green-700 rounded-full mb-3" id="page-icon-wrapper">
-                <i data-lucide="calendar-clock" class="w-6 h-6" id="page-icon"></i>
+    <!-- pb-24 garante espaço extra no mobile para a barra de navegação flutuante -->
+    <main class="flex-grow container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-7xl flex flex-col items-center justify-start pb-24 md:pb-8">
+
+        <!-- Cabeçalho Dinâmico -->
+        <div class="text-center mb-6 sm:mb-8 animate-fade-in" id="page-header">
+            <div class="inline-flex p-2.5 bg-emerald-50 text-emerald-700 rounded-xl mb-2.5 border border-emerald-100" id="page-icon-wrapper">
+                <i data-lucide="calendar-clock" class="w-5 h-5 sm:w-6 sm:h-6" id="page-icon"></i>
             </div>
-            <h2 class="text-3xl font-extrabold text-gray-800 mb-2" id="page-title">Carregando...</h2>
-            <p class="text-gray-500 font-medium max-w-md mx-auto" id="page-subtitle">Aguarde um momento.</p>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-800 mb-1" id="page-title">Carregando...</h2>
+            <p class="text-xs sm:text-sm text-slate-500 font-medium max-w-md mx-auto" id="page-subtitle">Aguarde um momento.</p>
         </div>
 
-        <!-- Container do Conteúdo (Onde o Iframe será injetado do zero) -->
-        <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl border border-gray-100 flex flex-col items-center w-full min-h-[380px] transition-all duration-300" id="content-container">
-            <!-- O iframe correspondente será inserido aqui pelo JavaScript -->
-            <div class="flex flex-col items-center justify-center py-12 text-gray-400">
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mb-3"></div>
-                <p>Carregando dados da API...</p>
+        <!-- Container do Conteúdo com padding otimizado para celulares -->
+        <div class="bg-transparent md:bg-white p-0 md:p-6 rounded-2xl md:shadow-sm md:border md:border-slate-100 flex flex-col items-center w-full min-h-[380px] transition-all duration-300" id="content-container">
+            <div class="flex flex-col items-center justify-center py-16 text-slate-400">
+                <div class="animate-spin rounded-full h-8 w-8 border-2 border-emerald-600 border-t-transparent mb-3"></div>
+                <p class="text-sm font-semibold">Carregando painel...</p>
             </div>
         </div>
 
     </main>
 
-    <footer class="bg-gray-900 text-gray-400 py-6 text-center text-sm border-t border-gray-800 mt-12">
+    <!-- Mobile Navigation Bar - Apenas visível em celulares e tablets -->
+    <div class="md:hidden fixed bottom-4 left-4 right-4 z-50">
+        <div class="bg-slate-900/95 backdrop-blur-md text-white rounded-2xl shadow-2xl border border-slate-800/40 p-2 flex justify-around items-center">
+            <a
+                href="#jogos"
+                id="mob-nav-jogos"
+                class="flex flex-col items-center gap-1 py-2 px-6 rounded-xl transition-all duration-300 flex-1 text-center"
+            >
+                <i data-lucide="calendar-clock" class="w-5 h-5 mx-auto"></i>
+                <span class="text-[10px] font-bold uppercase tracking-wider">Jogos</span>
+            </a>
+            <div class="h-6 w-[1px] bg-slate-800"></div>
+            <a
+                href="#classificacao"
+                id="mob-nav-classificacao"
+                class="flex flex-col items-center gap-1 py-2 px-6 rounded-xl transition-all duration-300 flex-1 text-center"
+            >
+                <i data-lucide="list-ordered" class="w-5 h-5 mx-auto"></i>
+                <span class="text-[10px] font-bold uppercase tracking-wider">Classificação</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Rodapé Desktop atualizado -->
+    <footer class="bg-slate-950 text-slate-400 py-6 text-center text-xs border-t border-slate-900 hidden md:block">
         <div class="container mx-auto px-4">
-            <p>&copy; 2026 FutCenter. Todos os direitos reservados.</p>
-            <p class="mt-1">Dados oficiais atualizados via <a href="https://api-futebol.com.br/" target="_blank" class="text-green-400 hover:underline font-semibold">API Futebol</a>.</p>
+            <p>Desenvolvedora do site: <a href="http://sccentrovelho.ddns.net" target="_blank" class="text-emerald-400 hover:underline font-semibold">sccentrovelho.ddns.net</a></p>
         </div>
     </footer>
 
     <script>
-        // Definição das páginas internas e seus respectivos conteúdos
+        // Definição responsiva de layouts e dados dos Widgets
         const pages = {
             '#jogos': {
                 title: 'Próximos Jogos',
                 subtitle: 'Confira as partidas agendadas, horários e detalhes das rodadas futuras.',
                 icon: 'calendar-clock',
-                // Geramos o iframe apenas quando acessado
                 iframeHtml: `
-                    <div class="widget-container flex justify-center w-full animate-fade-in">
-                        <iframe 
-                            src="https://widget.api-futebol.com.br/render/widget_7fc17e39fbd36e66" 
-                            title="API Futebol - Próximos Jogos" 
-                            width="400" 
-                            height="330" 
-                            style="border:1px solid #E5E7EB;border-radius:0.5rem;background:transparent;width:400px;height:330px;" 
-                            referrerpolicy="unsafe-url">
-                        </iframe>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full animate-fade-in justify-items-center">
+
+                        <!-- Card de Jogo 1 -->
+                        <div class="w-full max-w-[400px] bg-white rounded-2xl shadow-sm border border-slate-150 overflow-hidden hover:shadow-md transition-shadow duration-300">
+                            <div class="px-4 py-2.5 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                                <span class="text-[11px] font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                    Flamengo
+                                </span>
+                                <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-slate-400"></i>
+                            </div>
+                            <div class="p-2 flex justify-center widget-iframe-container">
+                                <iframe
+                                    src="https://widget.api-futebol.com.br/render/widget_7fc17e39fbd36e66"
+                                    title="API Futebol - Widget 1"
+                                    height="330"
+                                    style="border:none; border-radius:0.5rem; background:transparent; width:100%; height:330px;"
+                                    referrerpolicy="unsafe-url">
+                                </iframe>
+                            </div>
+                        </div>
+
+                        <!-- Card de Jogo 2 -->
+                        <div class="w-full max-w-[400px] bg-white rounded-2xl shadow-sm border border-slate-150 overflow-hidden hover:shadow-md transition-shadow duration-300">
+                            <div class="px-4 py-2.5 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                                <span class="text-[11px] font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                    Palmeiras
+                                </span>
+                                <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-slate-400"></i>
+                            </div>
+                            <div class="p-2 flex justify-center widget-iframe-container">
+                                <iframe
+                                    src="https://widget.api-futebol.com.br/render/widget_547e577c40011581"
+                                    title="API Futebol - Widget 2"
+                                    height="330"
+                                    style="border:none; border-radius:0.5rem; background:transparent; width:100%; height:330px;"
+                                    referrerpolicy="unsafe-url">
+                                </iframe>
+                            </div>
+                        </div>
+
+                        <!-- Card de Jogo 3 -->
+                        <div class="w-full max-w-[400px] bg-white rounded-2xl shadow-sm border border-slate-150 overflow-hidden hover:shadow-md transition-shadow duration-300">
+                            <div class="px-4 py-2.5 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                                <span class="text-[11px] font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                    Vasco
+                                </span>
+                                <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-slate-400"></i>
+                            </div>
+                            <div class="p-2 flex justify-center widget-iframe-container">
+                                <iframe
+                                    src="https://widget.api-futebol.com.br/render/widget_678fd36a45bbc413"
+                                    title="API Futebol - Widget 3"
+                                    height="330"
+                                    style="border:none; border-radius:0.5rem; background:transparent; width:100%; height:330px;"
+                                    referrerpolicy="unsafe-url">
+                                </iframe>
+                            </div>
+                        </div>
+
                     </div>
                 `
             },
             '#classificacao': {
-                title: 'Tabela de Classificação',
+                title: 'Tabela Brasileirão 2026',
                 subtitle: 'Classificação oficial e atualizada do Campeonato Brasileiro de 2026.',
                 icon: 'list-ordered',
                 iframeHtml: `
-                    <div class="widget-container w-full animate-fade-in">
-                        <iframe 
-                            src="https://widget.api-futebol.com.br/render/widget_64997d810ff37743" 
-                            title="API Futebol - Classificação" 
-                            style="border:1px solid #E5E7EB;border-radius:0.5rem;background:transparent;width:100%;height:520px;" 
-                            referrerpolicy="unsafe-url">
-                        </iframe>
+                    <div class="w-full max-w-4xl bg-white rounded-2xl shadow-sm border border-slate-150 overflow-hidden animate-fade-in">
+                        <div class="px-4 py-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-600 uppercase tracking-wider flex items-center gap-2">
+                                <i data-lucide="shield" class="w-4 h-4 text-emerald-600"></i>
+                                Classificação Geral - Série A
+                            </span>
+                        </div>
+                        <!-- Container com rolagem horizontal para prevenir estourar telas pequenas -->
+                        <div class="p-2 overflow-x-auto w-full">
+                            <div class="min-w-[320px] widget-iframe-container">
+                                <iframe
+                                    src="https://widget.api-futebol.com.br/render/widget_64997d810ff37743"
+                                    title="API Futebol - Classificação"
+                                    style="border:none; border-radius:0.5rem; background:transparent; width:100%; height:520px;"
+                                    referrerpolicy="unsafe-url">
+                                </iframe>
+                            </div>
+                        </div>
                     </div>
                 `
             }
         };
 
-        // Função do Roteador Interno
+        // Função do Roteador Interno com suporte para Estados Desktop + Mobile
         function navigate() {
-            // Pega o hash atual da URL (padrão é #jogos)
             const hash = window.location.hash || '#jogos';
             const page = pages[hash] || pages['#jogos'];
 
-            // Atualiza os links de navegação ativos visualmente
+            // 1. Atualiza Navegação Desktop
             const navJogos = document.getElementById('nav-jogos');
             const navClassificacao = document.getElementById('nav-classificacao');
 
+            // 2. Atualiza Navegação Mobile
+            const mobNavJogos = document.getElementById('mob-nav-jogos');
+            const mobNavClassificacao = document.getElementById('mob-nav-classificacao');
+
             if (hash === '#jogos') {
-                navJogos.className = "px-5 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 bg-green-600 text-white shadow-md";
-                navClassificacao.className = "px-5 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 text-green-100 hover:bg-green-600/30 hover:text-white";
+                // Classes de Destaque Desktop
+                navJogos.className = "px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 bg-emerald-600 text-white shadow-sm";
+                navClassificacao.className = "px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 text-emerald-100 hover:bg-emerald-600/30 hover:text-white";
+
+                // Classes de Destaque Mobile
+                mobNavJogos.className = "flex flex-col items-center gap-1 py-2 px-6 rounded-xl transition-all duration-300 flex-1 text-center bg-emerald-600/20 text-emerald-400";
+                mobNavClassificacao.className = "flex flex-col items-center gap-1 py-2 px-6 rounded-xl transition-all duration-300 flex-1 text-center text-slate-400 hover:text-slate-200";
             } else {
-                navClassificacao.className = "px-5 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 bg-green-600 text-white shadow-md";
-                navJogos.className = "px-5 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 text-green-100 hover:bg-green-600/30 hover:text-white";
+                // Classes de Destaque Desktop
+                navClassificacao.className = "px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 bg-emerald-600 text-white shadow-sm";
+                navJogos.className = "px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 text-emerald-100 hover:bg-emerald-600/30 hover:text-white";
+
+                // Classes de Destaque Mobile
+                mobNavClassificacao.className = "flex flex-col items-center gap-1 py-2 px-6 rounded-xl transition-all duration-300 flex-1 text-center bg-emerald-600/20 text-emerald-400";
+                mobNavJogos.className = "flex flex-col items-center gap-1 py-2 px-6 rounded-xl transition-all duration-300 flex-1 text-center text-slate-400 hover:text-slate-200";
             }
 
-            // Atualiza o Cabeçalho da Página
+            // Atualiza Textos do Cabeçalho
             document.getElementById('page-title').innerText = page.title;
             document.getElementById('page-subtitle').innerText = page.subtitle;
-            
+
             // Troca o ícone dinamicamente
             const iconElement = document.getElementById('page-icon');
             iconElement.setAttribute('data-lucide', page.icon);
-            
-            // Injeta o iframe limpo (isso força o carregamento perfeito no tamanho correto)
+
+            // Injeta o conteúdo/iframe no container limpando caches antigos
             const container = document.getElementById('content-container');
             container.innerHTML = page.iframeHtml;
 
-            // Reinicializa os ícones do Lucide para aplicar a alteração
+            // Reinicializa ícones do Lucide para as novas páginas geradas
             lucide.createIcons();
         }
 
-        // Escuta as mudanças de URL/Link Interno
+        // Escutador de Navegação (Mudar de Aba)
         window.addEventListener('hashchange', navigate);
 
-        // Carrega a página inicial ao abrir o site
+        // Inicializador ao carregar página pela primeira vez
         window.addEventListener('DOMContentLoaded', () => {
-            // Se não houver hash definido, força o #jogos por padrão
             if (!window.location.hash) {
                 window.location.hash = '#jogos';
             }
