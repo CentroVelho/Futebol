@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FutCenter - Painel do Futebol</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* Ajuste de responsividade para os iframes */
+        .widget-container iframe {
+            max-width: 100% !important;
+            margin: 0 auto;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col font-sans">
+    
+    <header class="bg-green-700 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between py-4 gap-4">
+            <!-- Logo -->
+            <a href="#jogos" class="flex items-center gap-2 hover:opacity-90 transition-opacity">
+                <i data-lucide="trophy" class="w-8 h-8 text-yellow-400"></i>
+                <span class="text-2xl font-black tracking-wider uppercase">FutCenter</span>
+            </a>
+            
+            <!-- Menu de Navegação (Links Internos) -->
+            <nav class="flex items-center gap-2 bg-green-800/50 p-1 rounded-xl border border-green-600/30">
+                <a 
+                    href="#jogos" 
+                    id="nav-jogos" 
+                    class="px-5 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2"
+                >
+                    <i data-lucide="calendar-clock" class="w-4 h-4"></i>
+                    Próximos Jogos
+                </a>
+                <a 
+                    href="#classificacao" 
+                    id="nav-classificacao" 
+                    class="px-5 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2"
+                >
+                    <i data-lucide="list-ordered" class="w-4 h-4"></i>
+                    Classificação
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8 max-w-4xl flex flex-col items-center justify-start">
+        
+        <!-- Cabeçalho Dinâmico da Página Atual -->
+        <div class="text-center mb-8 animate-fade-in" id="page-header">
+            <div class="inline-flex p-3 bg-green-100 text-green-700 rounded-full mb-3" id="page-icon-wrapper">
+                <i data-lucide="calendar-clock" class="w-6 h-6" id="page-icon"></i>
+            </div>
+            <h2 class="text-3xl font-extrabold text-gray-800 mb-2" id="page-title">Carregando...</h2>
+            <p class="text-gray-500 font-medium max-w-md mx-auto" id="page-subtitle">Aguarde um momento.</p>
+        </div>
+
+        <!-- Container do Conteúdo (Onde o Iframe será injetado do zero) -->
+        <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl border border-gray-100 flex flex-col items-center w-full min-h-[380px] transition-all duration-300" id="content-container">
+            <!-- O iframe correspondente será inserido aqui pelo JavaScript -->
+            <div class="flex flex-col items-center justify-center py-12 text-gray-400">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mb-3"></div>
+                <p>Carregando dados da API...</p>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 py-6 text-center text-sm border-t border-gray-800 mt-12">
+        <div class="container mx-auto px-4">
+            <p>&copy; 2026 FutCenter. Todos os direitos reservados.</p>
+            <p class="mt-1">Dados oficiais atualizados via <a href="https://api-futebol.com.br/" target="_blank" class="text-green-400 hover:underline font-semibold">API Futebol</a>.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Definição das páginas internas e seus respectivos conteúdos
+        const pages = {
+            '#jogos': {
+                title: 'Próximos Jogos',
+                subtitle: 'Confira as partidas agendadas, horários e detalhes das rodadas futuras.',
+                icon: 'calendar-clock',
+                // Geramos o iframe apenas quando acessado
+                iframeHtml: `
+                    <div class="widget-container flex justify-center w-full animate-fade-in">
+                        <iframe 
+                            src="https://widget.api-futebol.com.br/render/widget_7fc17e39fbd36e66" 
+                            title="API Futebol - Próximos Jogos" 
+                            width="400" 
+                            height="330" 
+                            style="border:1px solid #E5E7EB;border-radius:0.5rem;background:transparent;width:400px;height:330px;" 
+                            referrerpolicy="unsafe-url">
+                        </iframe>
+                    </div>
+                `
+            },
+            '#classificacao': {
+                title: 'Tabela de Classificação',
+                subtitle: 'Classificação oficial e atualizada do Campeonato Brasileiro de 2026.',
+                icon: 'list-ordered',
+                iframeHtml: `
+                    <div class="widget-container w-full animate-fade-in">
+                        <iframe 
+                            src="https://widget.api-futebol.com.br/render/widget_64997d810ff37743" 
+                            title="API Futebol - Classificação" 
+                            style="border:1px solid #E5E7EB;border-radius:0.5rem;background:transparent;width:100%;height:520px;" 
+                            referrerpolicy="unsafe-url">
+                        </iframe>
+                    </div>
+                `
+            }
+        };
+
+        // Função do Roteador Interno
+        function navigate() {
+            // Pega o hash atual da URL (padrão é #jogos)
+            const hash = window.location.hash || '#jogos';
+            const page = pages[hash] || pages['#jogos'];
+
+            // Atualiza os links de navegação ativos visualmente
+            const navJogos = document.getElementById('nav-jogos');
+            const navClassificacao = document.getElementById('nav-classificacao');
+
+            if (hash === '#jogos') {
+                navJogos.className = "px-5 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 bg-green-600 text-white shadow-md";
+                navClassificacao.className = "px-5 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 text-green-100 hover:bg-green-600/30 hover:text-white";
+            } else {
+                navClassificacao.className = "px-5 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 bg-green-600 text-white shadow-md";
+                navJogos.className = "px-5 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 text-green-100 hover:bg-green-600/30 hover:text-white";
+            }
+
+            // Atualiza o Cabeçalho da Página
+            document.getElementById('page-title').innerText = page.title;
+            document.getElementById('page-subtitle').innerText = page.subtitle;
+            
+            // Troca o ícone dinamicamente
+            const iconElement = document.getElementById('page-icon');
+            iconElement.setAttribute('data-lucide', page.icon);
+            
+            // Injeta o iframe limpo (isso força o carregamento perfeito no tamanho correto)
+            const container = document.getElementById('content-container');
+            container.innerHTML = page.iframeHtml;
+
+            // Reinicializa os ícones do Lucide para aplicar a alteração
+            lucide.createIcons();
+        }
+
+        // Escuta as mudanças de URL/Link Interno
+        window.addEventListener('hashchange', navigate);
+
+        // Carrega a página inicial ao abrir o site
+        window.addEventListener('DOMContentLoaded', () => {
+            // Se não houver hash definido, força o #jogos por padrão
+            if (!window.location.hash) {
+                window.location.hash = '#jogos';
+            }
+            navigate();
+        });
+    </script>
+</body>
+</html>
