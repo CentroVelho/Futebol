@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FutCenter - Painel do Futebol</title>
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
@@ -41,7 +44,7 @@
 </head>
 <body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans antialiased">
 
-    <!-- Header fixo com visual premium e indicador de atualização -->
+    <!-- Header fixo com visual premium -->
     <header class="bg-emerald-700 text-white shadow-md sticky top-0 z-40 backdrop-blur-md bg-emerald-700/95">
         <div class="container mx-auto px-4 py-3 sm:py-4 flex items-center justify-between max-w-7xl">
             <!-- Logo -->
@@ -63,6 +66,14 @@
                     Próximos Jogos
                 </a>
                 <a
+                    href="#brasil"
+                    id="nav-brasil"
+                    class="px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2"
+                >
+                    <i data-lucide="flag" class="w-4 h-4"></i>
+                    Brasil
+                </a>
+                <a
                     href="#classificacao"
                     id="nav-classificacao"
                     class="px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2"
@@ -77,16 +88,16 @@
     <!-- pb-24 garante espaço extra no mobile para a barra de navegação flutuante -->
     <main class="flex-grow container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-7xl flex flex-col items-center justify-start pb-24 md:pb-8">
 
-        <!-- Cabeçalho Dinâmico -->
+        <!-- Cabeçalho Dinâmico das Seções -->
         <div class="text-center mb-6 sm:mb-8 animate-fade-in" id="page-header">
             <div class="inline-flex p-2.5 bg-emerald-50 text-emerald-700 rounded-xl mb-2.5 border border-emerald-100" id="page-icon-wrapper">
                 <i data-lucide="calendar-clock" class="w-5 h-5 sm:w-6 sm:h-6" id="page-icon"></i>
             </div>
             <h2 class="text-xl sm:text-2xl font-extrabold text-slate-800 mb-1" id="page-title">Carregando...</h2>
-            <p class="text-xs sm:text-sm text-slate-500 font-medium max-w-md mx-auto" id="page-subtitle">Aguarde um momento.</p>
+            <p class="text-xs sm:text-sm text-slate-500 font-medium max-w-md mx-auto" id="page-subtitle">Preparando as informações.</p>
         </div>
 
-        <!-- Container do Conteúdo com padding otimizado para celulares -->
+        <!-- Container do Conteúdo que receberá os widgets dinamicamente -->
         <div class="bg-transparent md:bg-white p-0 md:p-6 rounded-2xl md:shadow-sm md:border md:border-slate-100 flex flex-col items-center w-full min-h-[380px] transition-all duration-300" id="content-container">
             <div class="flex flex-col items-center justify-center py-16 text-slate-400">
                 <div class="animate-spin rounded-full h-8 w-8 border-2 border-emerald-600 border-t-transparent mb-3"></div>
@@ -102,24 +113,33 @@
             <a
                 href="#jogos"
                 id="mob-nav-jogos"
-                class="flex flex-col items-center gap-1 py-2 px-6 rounded-xl transition-all duration-300 flex-1 text-center"
+                class="flex flex-col items-center gap-1 py-2 px-2 sm:px-4 rounded-xl transition-all duration-300 flex-1 text-center"
             >
                 <i data-lucide="calendar-clock" class="w-5 h-5 mx-auto"></i>
-                <span class="text-[10px] font-bold uppercase tracking-wider">Jogos</span>
+                <span class="text-[10px] font-bold uppercase tracking-wider">Clubes</span>
+            </a>
+            <div class="h-6 w-[1px] bg-slate-800"></div>
+            <a
+                href="#brasil"
+                id="mob-nav-brasil"
+                class="flex flex-col items-center gap-1 py-2 px-2 sm:px-4 rounded-xl transition-all duration-300 flex-1 text-center"
+            >
+                <i data-lucide="flag" class="w-5 h-5 mx-auto"></i>
+                <span class="text-[10px] font-bold uppercase tracking-wider">Brasil</span>
             </a>
             <div class="h-6 w-[1px] bg-slate-800"></div>
             <a
                 href="#classificacao"
                 id="mob-nav-classificacao"
-                class="flex flex-col items-center gap-1 py-2 px-6 rounded-xl transition-all duration-300 flex-1 text-center"
+                class="flex flex-col items-center gap-1 py-2 px-2 sm:px-4 rounded-xl transition-all duration-300 flex-1 text-center"
             >
                 <i data-lucide="list-ordered" class="w-5 h-5 mx-auto"></i>
-                <span class="text-[10px] font-bold uppercase tracking-wider">Classificação</span>
+                <span class="text-[10px] font-bold uppercase tracking-wider">Tabela</span>
             </a>
         </div>
     </div>
 
-    <!-- Rodapé adaptado para aparecer tanto em Computadores quanto em Celulares -->
+    <!-- Rodapé -->
     <footer class="bg-slate-950 text-slate-400 pt-6 pb-24 md:pb-6 text-center text-xs border-t border-slate-900">
         <div class="container mx-auto px-4">
             <p>Desenvolvedora do site: <a href="http://sccentrovelho.ddns.net" target="_blank" class="text-emerald-400 hover:underline font-semibold">sccentrovelho.ddns.net</a></p>
@@ -127,16 +147,16 @@
     </footer>
 
     <script>
-        // Definição responsiva de layouts e dados dos Widgets
+        // Definição responsiva de layouts e dados dos Widgets para as 3 seções
         const pages = {
             '#jogos': {
-                title: 'Próximos Jogos',
-                subtitle: 'Confira as partidas agendadas, horários e detalhes das rodadas futuras.',
+                title: 'Próximos Jogos dos Clubes',
+                subtitle: 'Acompanhe as partidas agendadas de Flamengo, Palmeiras e Vasco.',
                 icon: 'calendar-clock',
                 iframeHtml: `
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full animate-fade-in justify-items-center">
 
-                        <!-- Card de Jogo 1 -->
+                        <!-- Card: Flamengo -->
                         <div class="w-full max-w-[400px] bg-white rounded-2xl shadow-sm border border-slate-150 overflow-hidden hover:shadow-md transition-shadow duration-300">
                             <div class="px-4 py-2.5 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
                                 <span class="text-[11px] font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-1.5">
@@ -148,7 +168,7 @@
                             <div class="p-2 flex justify-center widget-iframe-container">
                                 <iframe
                                     src="https://widget.api-futebol.com.br/render/widget_7fc17e39fbd36e66"
-                                    title="API Futebol - Widget 1"
+                                    title="API Futebol - Flamengo"
                                     height="330"
                                     style="border:none; border-radius:0.5rem; background:transparent; width:100%; height:330px;"
                                     referrerpolicy="unsafe-url">
@@ -156,7 +176,7 @@
                             </div>
                         </div>
 
-                        <!-- Card de Jogo 2 -->
+                        <!-- Card: Palmeiras -->
                         <div class="w-full max-w-[400px] bg-white rounded-2xl shadow-sm border border-slate-150 overflow-hidden hover:shadow-md transition-shadow duration-300">
                             <div class="px-4 py-2.5 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
                                 <span class="text-[11px] font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-1.5">
@@ -168,7 +188,7 @@
                             <div class="p-2 flex justify-center widget-iframe-container">
                                 <iframe
                                     src="https://widget.api-futebol.com.br/render/widget_547e577c40011581"
-                                    title="API Futebol - Widget 2"
+                                    title="API Futebol - Palmeiras"
                                     height="330"
                                     style="border:none; border-radius:0.5rem; background:transparent; width:100%; height:330px;"
                                     referrerpolicy="unsafe-url">
@@ -176,7 +196,7 @@
                             </div>
                         </div>
 
-                        <!-- Card de Jogo 3 -->
+                        <!-- Card: Vasco -->
                         <div class="w-full max-w-[400px] bg-white rounded-2xl shadow-sm border border-slate-150 overflow-hidden hover:shadow-md transition-shadow duration-300">
                             <div class="px-4 py-2.5 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
                                 <span class="text-[11px] font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-1.5">
@@ -188,7 +208,7 @@
                             <div class="p-2 flex justify-center widget-iframe-container">
                                 <iframe
                                     src="https://widget.api-futebol.com.br/render/widget_678fd36a45bbc413"
-                                    title="API Futebol - Widget 3"
+                                    title="API Futebol - Vasco"
                                     height="330"
                                     style="border:none; border-radius:0.5rem; background:transparent; width:100%; height:330px;"
                                     referrerpolicy="unsafe-url">
@@ -199,12 +219,37 @@
                     </div>
                 `
             },
+            '#brasil': {
+                title: 'Seleção Brasileira',
+                subtitle: 'Acompanhe os próximos jogos do Brasil na temporada.',
+                icon: 'flag',
+                iframeHtml: `
+                    <div class="w-full max-w-[400px] bg-white rounded-2xl shadow-sm border border-slate-150 overflow-hidden hover:shadow-md transition-shadow duration-300 animate-fade-in mx-auto">
+                        <div class="px-4 py-2.5 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                            <span class="text-[11px] font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                Seleção Brasileira
+                            </span>
+                            <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-slate-400"></i>
+                        </div>
+                        <div class="p-2 flex justify-center widget-iframe-container">
+                            <iframe
+                                src="https://widget.api-futebol.com.br/render/widget_e6adaf31f537364b"
+                                title="API Futebol - Seleção Brasileira"
+                                height="330"
+                                style="border:none; border-radius:0.5rem; background:transparent; width:100%; height:330px;"
+                                referrerpolicy="unsafe-url">
+                            </iframe>
+                        </div>
+                    </div>
+                `
+            },
             '#classificacao': {
-                title: 'Tabela Brasileirão 2026',
-                subtitle: 'Classificação oficial e atualizada do Campeonato Brasileiro de 2026.',
+                title: 'Tabela Brasileirão',
+                subtitle: 'Classificação oficial e atualizada do Campeonato Brasileiro.',
                 icon: 'list-ordered',
                 iframeHtml: `
-                    <div class="w-full max-w-4xl bg-white rounded-2xl shadow-sm border border-slate-150 overflow-hidden animate-fade-in">
+                    <div class="w-full max-w-4xl bg-white rounded-2xl shadow-sm border border-slate-150 overflow-hidden animate-fade-in mx-auto">
                         <div class="px-4 py-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
                             <span class="text-xs font-bold text-slate-600 uppercase tracking-wider flex items-center gap-2">
                                 <i data-lucide="shield" class="w-4 h-4 text-emerald-600"></i>
@@ -227,57 +272,56 @@
             }
         };
 
-        // Função do Roteador Interno com suporte para Estados Desktop + Mobile
         function navigate() {
             const hash = window.location.hash || '#jogos';
             const page = pages[hash] || pages['#jogos'];
 
-            // 1. Atualiza Navegação Desktop
-            const navJogos = document.getElementById('nav-jogos');
-            const navClassificacao = document.getElementById('nav-classificacao');
+            // Array de todas as rotas possíveis
+            const rotas = ['jogos', 'brasil', 'classificacao'];
+            const rotaAtual = hash.replace('#', '');
+            const rotaValida = rotas.includes(rotaAtual) ? rotaAtual : 'jogos';
 
-            // 2. Atualiza Navegação Mobile
-            const mobNavJogos = document.getElementById('mob-nav-jogos');
-            const mobNavClassificacao = document.getElementById('mob-nav-classificacao');
+            // Estilos CSS para quando o botão está INATIVO ou ATIVO
+            const desktopInativo = "px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 text-emerald-100 hover:bg-emerald-600/30 hover:text-white";
+            const desktopAtivo = "px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 bg-emerald-600 text-white shadow-sm";
 
-            if (hash === '#jogos') {
-                // Classes de Destaque Desktop
-                navJogos.className = "px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 bg-emerald-600 text-white shadow-sm";
-                navClassificacao.className = "px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 text-emerald-100 hover:bg-emerald-600/30 hover:text-white";
+            const mobileInativo = "flex flex-col items-center gap-1 py-2 px-2 sm:px-4 rounded-xl transition-all duration-300 flex-1 text-center text-slate-400 hover:text-slate-200";
+            const mobileAtivo = "flex flex-col items-center gap-1 py-2 px-2 sm:px-4 rounded-xl transition-all duration-300 flex-1 text-center bg-emerald-600/20 text-emerald-400";
 
-                // Classes de Destaque Mobile
-                mobNavJogos.className = "flex flex-col items-center gap-1 py-2 px-6 rounded-xl transition-all duration-300 flex-1 text-center bg-emerald-600/20 text-emerald-400";
-                mobNavClassificacao.className = "flex flex-col items-center gap-1 py-2 px-6 rounded-xl transition-all duration-300 flex-1 text-center text-slate-400 hover:text-slate-200";
-            } else {
-                // Classes de Destaque Desktop
-                navClassificacao.className = "px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 bg-emerald-600 text-white shadow-sm";
-                navJogos.className = "px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 text-emerald-100 hover:bg-emerald-600/30 hover:text-white";
+            // Aplica as cores corretas para cada botão nos menus Desktop e Mobile
+            rotas.forEach(rota => {
+                const navDesktop = document.getElementById(`nav-${rota}`);
+                const navMobile = document.getElementById(`mob-nav-${rota}`);
 
-                // Classes de Destaque Mobile
-                mobNavClassificacao.className = "flex flex-col items-center gap-1 py-2 px-6 rounded-xl transition-all duration-300 flex-1 text-center bg-emerald-600/20 text-emerald-400";
-                mobNavJogos.className = "flex flex-col items-center gap-1 py-2 px-6 rounded-xl transition-all duration-300 flex-1 text-center text-slate-400 hover:text-slate-200";
-            }
+                if(rota === rotaValida) {
+                    if(navDesktop) navDesktop.className = desktopAtivo;
+                    if(navMobile) navMobile.className = mobileAtivo;
+                } else {
+                    if(navDesktop) navDesktop.className = desktopInativo;
+                    if(navMobile) navMobile.className = mobileInativo;
+                }
+            });
 
-            // Atualiza Textos do Cabeçalho
+            // Atualiza os Textos do Cabeçalho
             document.getElementById('page-title').innerText = page.title;
             document.getElementById('page-subtitle').innerText = page.subtitle;
 
-            // Troca o ícone dinamicamente
+            // Troca o ícone principal dinamicamente
             const iconElement = document.getElementById('page-icon');
             iconElement.setAttribute('data-lucide', page.icon);
 
-            // Injeta o conteúdo/iframe no container limpando caches antigos
+            // Injeta o código do Iframe no container
             const container = document.getElementById('content-container');
             container.innerHTML = page.iframeHtml;
 
-            // Reinicializa ícones do Lucide para as novas páginas geradas
+            // Recria os ícones Lucide recém-adicionados ao DOM
             lucide.createIcons();
         }
 
-        // Escutador de Navegação (Mudar de Aba)
+        // Fica escutando as mudanças na URL (quando clica numa aba)
         window.addEventListener('hashchange', navigate);
 
-        // Inicializador ao carregar página pela primeira vez
+        // Quando o site carrega pela primeira vez, joga para a aba de Jogos
         window.addEventListener('DOMContentLoaded', () => {
             if (!window.location.hash) {
                 window.location.hash = '#jogos';
